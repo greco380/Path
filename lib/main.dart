@@ -34,12 +34,18 @@ class GamePainter extends CustomPainter {
     var paint = Paint()
       ..style = PaintingStyle.fill
       ..color = BLUE_NORMAL
-      ..isAntiAlias = true;
+      ..isAntiAlias = true
+      ..strokeWidth = 15;
 
 
     //var playerPosition = Offset(size.width / 2, size.height - 30);
 
     if (clickPos.dx != -1) {
+      canvas.drawLine(
+        new Offset(0,0),
+        this.clickPos,
+        paint
+      );
       canvas.drawCircle(
         this.clickPos, // player position
         30, // radius
