@@ -1,12 +1,18 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
+import 'dart:math';
+import 'dart:core';
 import './colors.dart';
+
+double abs(double a) {
+  return a < 0 ? -a : a;
+}
 
 void main() => runApp(App());
 
 class App extends StatelessWidget {
-    // This widget is the root of your application.
-    @override
-    Widget build(BuildContext context) {
+    @override Widget build(BuildContext context) {
         return MaterialApp(
             title: 'Path Demo',
             theme: ThemeData(
@@ -27,8 +33,9 @@ class GamePage extends StatefulWidget {
 
 class GamePainter extends CustomPainter {
   Offset clickPos = new Offset(10, 10);
+  int time;
 
-  GamePainter(this.clickPos);
+  GamePainter(this.clickPos, this.time);
 
   void paint(Canvas canvas, Size size) {
     var paint = Paint()
@@ -37,21 +44,17 @@ class GamePainter extends CustomPainter {
       ..isAntiAlias = true
       ..strokeWidth = 15;
 
-
-    //var playerPosition = Offset(size.width / 2, size.height - 30);
-
-    if (clickPos.dx != -1) {
-      canvas.drawLine(
-        new Offset(0,0),
-        this.clickPos,
-        paint
-      );
-      canvas.drawCircle(
-        this.clickPos, // player position
-        30, // radius
-        paint // position
-      );
-    }
+    double time = this.time / 200;
+    canvas.drawLine(
+      new Offset(0, 0),
+      new Offset(100 *  abs(cos(time)),100 * sin(time)),
+      paint
+    );
+    canvas.drawCircle(
+      new Offset(100 * abs(cos(time)),100 * sin(time)), // player position
+      30, // radius
+      paint // position
+    );
 
     canvas.save();
     canvas.restore();
@@ -66,6 +69,23 @@ class Game extends StatefulWidget {
 
 class _GameState extends State<Game> {
   Offset clickPosition = new Offset(-1, -1);
+
+  Stopwatch stopwatch;
+  Timer timer;
+
+  Duration duration;
+
+  _GameState() {
+    this.stopwatch = Stopwatch();
+    this.stopwatch.reset();
+    this.stopwatch.start();
+
+    this.timer = new Timer.periodic(new Duration(milliseconds: 30), (Timer timer) {
+      setState(() {
+        duration = stopwatch.elapsed;
+      });
+    });
+  }
 
   @override Widget build(BuildContext context) {
     return new GestureDetector(
@@ -88,7 +108,7 @@ class _GameState extends State<Game> {
 
       child: Container(
         child: CustomPaint(
-          painter: GamePainter(clickPosition)
+          painter: GamePainter(clickPosition, stopwatch.elapsedMilliseconds)
         ),
         constraints: BoxConstraints.expand() // make it fullscreen
       )
