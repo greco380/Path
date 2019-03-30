@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import './colors.dart';
 
-void main() => runApp(MyApp());
+void main() => runApp(App());
 
-class MyApp extends StatelessWidget {
+class App extends StatelessWidget {
     // This widget is the root of your application.
     @override
     Widget build(BuildContext context) {
@@ -22,11 +22,14 @@ class GamePage extends StatefulWidget {
 
     final String title;
 
-    @override
-    _GamePageState createState() => _GamePageState();
+    @override _GamePageState createState() => _GamePageState();
 }
 
 class GamePainter extends CustomPainter {
+  Offset clickPos = new Offset(10, 10);
+
+  GamePainter(this.clickPos);
+
   void paint(Canvas canvas, Size size) {
     var paint = Paint()
       ..style = PaintingStyle.fill
@@ -34,13 +37,15 @@ class GamePainter extends CustomPainter {
       ..isAntiAlias = true;
 
 
-    var playerPosition = Offset(size.width / 2, size.height - 30);
+    //var playerPosition = Offset(size.width / 2, size.height - 30);
 
-    canvas.drawCircle(
-      playerPosition, // player position
-      30, // radius
-      paint // position
-    );
+    if (clickPos.dx != -1) {
+      canvas.drawCircle(
+        this.clickPos, // player position
+        30, // radius
+        paint // position
+      );
+    }
 
     canvas.save();
     canvas.restore();
@@ -49,16 +54,47 @@ class GamePainter extends CustomPainter {
   bool shouldRepaint(CustomPainter oldDelegate) => true;
 }
 
+class Game extends StatefulWidget {
+  @override _GameState createState() => _GameState();
+}
+
+class _GameState extends State<Game> {
+  Offset clickPosition = new Offset(-1, -1);
+
+  @override Widget build(BuildContext context) {
+    return new GestureDetector(
+      onPanStart: (DragStartDetails details) {
+        setState(() {
+          clickPosition = details.globalPosition;
+        });
+      },
+      onPanUpdate: (DragUpdateDetails details) {
+        setState(() {
+          clickPosition = details.globalPosition;
+        });
+      },
+      onPanEnd: (DragEndDetails details) {
+        setState(() {
+          clickPosition = new Offset(-1, -1);
+        });
+      },
+
+
+      child: Container(
+        child: CustomPaint(
+          painter: GamePainter(clickPosition)
+        ),
+        constraints: BoxConstraints.expand() // make it fullscreen
+      )
+    );
+  }
+}
+
 class _GamePageState extends State<GamePage> {
-    @override
-    Widget build(BuildContext context) {
-        return Scaffold(
-            body: Container(
-              child: CustomPaint(
-                painter: GamePainter()
-              ),
-              constraints: BoxConstraints.expand() // make it fullscreen
-            )
-        );
-    }
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      body: new Game()
+    );
+  }
 }
