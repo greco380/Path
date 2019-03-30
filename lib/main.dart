@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import './colors.dart';
 
 void main() => runApp(MyApp());
 
@@ -18,47 +19,46 @@ class MyApp extends StatelessWidget {
 
 class GamePage extends StatefulWidget {
     GamePage({Key key, this.title}) : super(key: key);
-    
+
     final String title;
 
     @override
     _GamePageState createState() => _GamePageState();
 }
 
+class GamePainter extends CustomPainter {
+  void paint(Canvas canvas, Size size) {
+    var paint = Paint()
+      ..style = PaintingStyle.fill
+      ..color = BLUE_NORMAL
+      ..isAntiAlias = true;
+
+
+    var playerPosition = Offset(size.width / 2, size.height - 30);
+
+    canvas.drawCircle(
+      playerPosition, // player position
+      30, // radius
+      paint // position
+    );
+
+    canvas.save();
+    canvas.restore();
+  }
+
+  bool shouldRepaint(CustomPainter oldDelegate) => true;
+}
+
 class _GamePageState extends State<GamePage> {
-    int _counter = 0;
-
-    void _incrementCounter() {
-        setState(() {
-            _counter++;
-        });
-    }
-
     @override
     Widget build(BuildContext context) {
         return Scaffold(
-            appBar: AppBar(
-                title: Text(widget.title),
-            ),
-            body: Center(
-                child: Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: <Widget>[
-                        Text(
-                            'You have pushed the button this many times:',
-                        ),
-                        Text(
-                            '$_counter',
-                            style: Theme.of(context).textTheme.display1,
-                        ),
-                    ],
-                ),
-            ),
-            floatingActionButton: FloatingActionButton(
-                onPressed: _incrementCounter,
-                tooltip: 'Increment',
-                child: Icon(Icons.add),
-            ),
+            body: Container(
+              child: CustomPaint(
+                painter: GamePainter()
+              ),
+              constraints: BoxConstraints.expand() // make it fullscreen
+            )
         );
     }
 }
