@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import './colors.dart';
+import 'dart:math';
 
 void main() => runApp(App());
 
@@ -53,12 +54,33 @@ class GamePainter extends CustomPainter {
       );
     }
 
+
+//   var randInt = new Random();
+//   for (var i = 0; i < size.width; i++) {
+//     int randWidth = randInt.nextInt(100);
+//   }
+
+
+// //int randWidth = int nextInt(int size.width);
+
+// //class GamePainter extends CustomPainter {
+//   Offset obsticalPos = new Offset(, 10);
+
+//       canvas.drawCircle(
+//         , // player position
+//         30, // radius
+//         paint // position
+//       );
+// //rand[0, size.width]
+//     }
+
     canvas.save();
     canvas.restore();
   }
 
   bool shouldRepaint(CustomPainter oldDelegate) => true;
 }
+
 
 class Game extends StatefulWidget {
   @override _GameState createState() => _GameState();
@@ -104,3 +126,10 @@ class _GamePageState extends State<GamePage> {
     );
   }
 }
+
+
+
+
+
+
+
