@@ -60,7 +60,7 @@ class GamePainter extends CustomPainter {
 
 //   var randInt = new Random();
 //   for (var i = 0; i < size.width; i++) {
-//     int randWidth = randInt.nextInt(100);
+//     int randWidth = randInt.nextInt(size.width);
 //   }
 
 
@@ -70,8 +70,8 @@ class GamePainter extends CustomPainter {
 //   Offset obsticalPos = new Offset(, 10);
 
 //       canvas.drawCircle(
-//         , // player position
-//         30, // radius
+//         randWidth, // player position
+//         15, // radius
 //         paint // position
 //       );
 // //rand[0, size.width]
