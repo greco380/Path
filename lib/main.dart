@@ -45,6 +45,12 @@ class GamePainter extends CustomPainter {
       ..isAntiAlias = true
       ..strokeWidth = 15;
 
+      var paintObstacle = Paint()
+      ..style = PaintingStyle.fill
+      ..color = RED_NORMAL
+      ..isAntiAlias = true
+      ..strokeWidth = 15;
+
     double time = this.time / 200;
     canvas.drawLine(
       new Offset(0, 0),
@@ -57,6 +63,19 @@ class GamePainter extends CustomPainter {
       paint // position
     );
 
+      //WHY DOES THIS WORK BUT MY drawObstacle DOESN'T?!?!?
+    // canvas.drawCircle(
+    //   new Offset(100 * abs(cos(time)),100 * sin(time)), // player position
+    //   30, // radius
+    //   paint // position
+    // );
+
+    canvas.drawObstacle(
+      new Offset(int nextInt(int max));
+      30, // radius
+      paint // position
+    );
+
 
 //   var randInt = new Random();
 //   for (var i = 0; i < size.width; i++) {
@@ -64,15 +83,13 @@ class GamePainter extends CustomPainter {
 //   }
 
 
-// //int randWidth = int nextInt(int size.width);
-
 // //class GamePainter extends CustomPainter {
-//   Offset obsticalPos = new Offset(, 10);
+//   Offset obsticalPos = new Offset(rand[0, size.width]);
 
 //       canvas.drawCircle(
 //         randWidth, // player position
 //         15, // radius
-//         paint // position
+//         paintObstacle // position
 //       );
 // //rand[0, size.width]
 //     }
