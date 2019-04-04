@@ -38,6 +38,8 @@ class GamePainter extends CustomPainter {
 
   GamePainter(this.clickPos, this.time);
 
+  get obstacle => null;
+
   void paint(Canvas canvas, Size size) {
     var paint = Paint()
       ..style = PaintingStyle.fill
@@ -70,35 +72,42 @@ class GamePainter extends CustomPainter {
     //   paint // position
     // );
 
-    canvas.drawObstacle(
-      new Offset(int nextInt(int max));
-      30, // radius
-      paint // position
-    );
+    drawObstacle(canvas);
+      
+      
+      //   var randInt = new Random();
+      //   for (var i = 0; i < size.width; i++) {
+      //     int randWidth = randInt.nextInt(size.width);
+      //   }
+      
+      
+      // //class GamePainter extends CustomPainter {
+      //   Offset obsticalPos = new Offset(rand[0, size.width]);
+      
+      //       canvas.drawCircle(
+      //         randWidth, // player position
+      //         15, // radius
+      //         paintObstacle // position
+      //       );
+      // //rand[0, size.width]
+      //     }
+      
+          canvas.save();
+          canvas.restore();
+        }
 
-
-//   var randInt = new Random();
-//   for (var i = 0; i < size.width; i++) {
-//     int randWidth = randInt.nextInt(size.width);
-//   }
-
-
-// //class GamePainter extends CustomPainter {
-//   Offset obsticalPos = new Offset(rand[0, size.width]);
-
-//       canvas.drawCircle(
-//         randWidth, // player position
-//         15, // radius
-//         paintObstacle // position
-//       );
-// //rand[0, size.width]
-//     }
-
-    canvas.save();
-    canvas.restore();
+  drawObstacle(Canvas canvas) {
+    var drawObstacle = obstacle;
+        canvas.obstacle(
+    new Offset(int nextInt(int max));
+          30, // radius
+          paint // position
+        );
   }
-
-  bool shouldRepaint(CustomPainter oldDelegate) => true;
+      
+        bool shouldRepaint(CustomPainter oldDelegate) => true;
+      
+        double nextInt(Type int, Function<T extends num>(a, b) max) {}
 }
 
 
