@@ -32,29 +32,61 @@ class GamePage extends StatefulWidget {
 }
 
 class GamePainter extends CustomPainter {
+  Random rand = new Random(12);
+
   Offset clickPos = new Offset(10, 10);
   int time;
 
+  Canvas canvas;
+  Size dimensions;
+
   GamePainter(this.clickPos, this.time);
 
-  void paint(Canvas canvas, Size size) {
+  void paintPivot(double r, double l, int side) {
+    double radius = r * dimensions.width;
+    double location = l * dimensions.width;
+    int speed = 500;
+
     var paint = Paint()
       ..style = PaintingStyle.fill
       ..color = BLUE_NORMAL
       ..isAntiAlias = true
       ..strokeWidth = 15;
 
-    double time = this.time / 200;
+    double time = this.time / speed + rand.nextInt(500);
+
+
+    Offset position = new Offset(
+      -(side * 2 - 1) * radius *  abs(cos(time)) + dimensions.width * side,
+      radius * sin(time) + dimensions.height - location
+    );
+
     canvas.drawLine(
-      new Offset(0, 0),
-      new Offset(100 *  abs(cos(time)),100 * sin(time)),
+      new Offset(dimensions.width * side, dimensions.height - location),
+      position,
       paint
     );
     canvas.drawCircle(
-      new Offset(100 * abs(cos(time)),100 * sin(time)), // player position
-      30, // radius
-      paint // position
+      position,
+      30,
+      paint
     );
+  }
+  
+  void paint(Canvas canvas, Size size) {
+    this.dimensions = size;
+    this.canvas = canvas;
+
+    this.rand = new Random(12);
+
+    double dist = rand.nextDouble();
+    paintPivot(dist, dist, 1);
+
+    for (var i = 0; i < 3; i++) {
+      double radious = rand.nextDouble();
+      dist += rand.nextDouble();
+      paintPivot(radious, dist, i % 2);
+    }
 
     canvas.save();
     canvas.restore();
