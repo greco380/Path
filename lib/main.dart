@@ -105,7 +105,7 @@ class GamePainter extends CustomPainter {
 
     var paint = Paint()
       ..style = PaintingStyle.fill
-      ..color = BLUE_NORMAL
+      ..color = RED_NORMAL
       ..isAntiAlias = true
       ..strokeWidth = 15;
 
