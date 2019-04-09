@@ -100,8 +100,20 @@ class GamePainter extends CustomPainter {
   }
 
   void drawObstacle() {
-    int width = this.rand.nextInt(100);
-    
+    double x = this.rand.nextDouble() * this.dimensions.width;
+    double y = this.rand.nextDouble() * this.dimensions.height;
+
+    var paint = Paint()
+      ..style = PaintingStyle.fill
+      ..color = BLUE_NORMAL
+      ..isAntiAlias = true
+      ..strokeWidth = 15;
+
+    this.canvas.drawCircle(
+      Offset(x, y),
+      15,
+      paint
+    );
   }
 
   bool shouldRepaint(CustomPainter oldDelegate) => true;
