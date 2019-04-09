@@ -40,18 +40,34 @@ class GamePainter extends CustomPainter {
   Canvas canvas;
   Size dimensions;
 
-  GamePainter(this.clickPos, this.time);
+  bool clicked = false;
 
-  void paintPivot(double r, double l, int side) {
+  int id = 1;
+
+  Map<String, int> data;
+
+  GamePainter(this.clickPos, this.time, this.clicked, this.data);
+
+  Offset paintPivot(double r, double l, int spot) {
     double radius = r * dimensions.width;
     double location = l * dimensions.width;
     int speed = 500;
+    int side = spot % 2;
   
-    var paint = Paint()
-      ..style = PaintingStyle.fill
-      ..color = BLUE_NORMAL
-      ..isAntiAlias = true
-      ..strokeWidth = 15;
+    var paint;
+    if (this.data["id"] == spot) {
+      paint = Paint()
+        ..style = PaintingStyle.fill
+        ..color = BLUE_NORMAL
+        ..isAntiAlias = true
+        ..strokeWidth = 15;
+    } else {
+      paint = Paint()
+        ..style = PaintingStyle.fill
+        ..color = BLUE_LIGHT
+        ..isAntiAlias = true
+        ..strokeWidth = 15;
+    }
 
     double time = this.time / speed + rand.nextInt(500);
 
@@ -70,6 +86,8 @@ class GamePainter extends CustomPainter {
       30,
       paint
     );
+
+    return position;
   }
 
   get obstacle => null;
@@ -82,21 +100,36 @@ class GamePainter extends CustomPainter {
     this.rand = new Random(12);
 
     // draw pivots
-    double dist = rand.nextDouble();
-    paintPivot(dist, dist, 1);
+    double dist = .3;
+    double prevRadius = dist;
+    Offset prevPosition = paintPivot(prevRadius, dist, 1);
 
-    for (var i = 0; i < 3; i++) {
-      double radious = rand.nextDouble();
-      dist += rand.nextDouble();
-      paintPivot(radious, dist, i % 2);
+    for (var i = 2; i < 4; i++) {
+      double radius = 1 - prevRadius + getDouble(0, prevRadius);
+      dist += sqrt(pow(radius + prevRadius, 2) - 1);
+      Offset position = paintPivot(radius, dist, i);
+
+      if (this.data["clicked"] == 1 && this.data["id"] == i - 1) {
+        double dist = pow(prevPosition.dx - position.dx, 2) + pow(prevPosition.dy - position.dy, 2);
+        if (dist <= pow(60, 2)) {
+          this.data["id"] += 1;
+        }
+      }
+
+      prevRadius = radius;
     }
 
     // draw obstacles
     drawObstacle();
-      
+    
     // draw to screen
+    this.data["clicked"] = 0;
     canvas.save();
     canvas.restore();
+  }
+
+  double getDouble(double min, double max) {
+    return rand.nextDouble() * (max - min) + min;
   }
 
   void drawObstacle() {
@@ -132,6 +165,10 @@ class _GameState extends State<Game> {
 
   Duration duration;
 
+  bool clicked = false;
+
+  Map<String, int> data = {"id": 1, "clicked": 0};
+
   _GameState() {
     this.stopwatch = Stopwatch();
     this.stopwatch.reset();
@@ -161,10 +198,15 @@ class _GameState extends State<Game> {
           clickPosition = new Offset(-1, -1);
         });
       },
+      onTapDown: (TapDownDetails details) {
+        setState(() {
+          data["clicked"] = 1;
+        });
+      },
 
       child: Container(
         child: CustomPaint(
-          painter: GamePainter(clickPosition, stopwatch.elapsedMilliseconds)
+          painter: GamePainter(clickPosition, stopwatch.elapsedMilliseconds, clicked, data)
         ),
         constraints: BoxConstraints.expand() // make it fullscreen
       )
