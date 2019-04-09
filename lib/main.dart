@@ -46,7 +46,7 @@ class GamePainter extends CustomPainter {
     double radius = r * dimensions.width;
     double location = l * dimensions.width;
     int speed = 500;
-
+  
     var paint = Paint()
       ..style = PaintingStyle.fill
       ..color = BLUE_NORMAL
@@ -55,12 +55,11 @@ class GamePainter extends CustomPainter {
 
     double time = this.time / speed + rand.nextInt(500);
 
-
     Offset position = new Offset(
       -(side * 2 - 1) * radius *  abs(cos(time)) + dimensions.width * side,
       radius * sin(time) + dimensions.height - location
     );
-
+    
     canvas.drawLine(
       new Offset(dimensions.width * side, dimensions.height - location),
       position,
@@ -72,13 +71,17 @@ class GamePainter extends CustomPainter {
       paint
     );
   }
+
+  get obstacle => null;
   
   void paint(Canvas canvas, Size size) {
     this.dimensions = size;
     this.canvas = canvas;
 
+    // setup randomizer
     this.rand = new Random(12);
 
+    // draw pivots
     double dist = rand.nextDouble();
     paintPivot(dist, dist, 1);
 
@@ -88,12 +91,22 @@ class GamePainter extends CustomPainter {
       paintPivot(radious, dist, i % 2);
     }
 
+    // draw obstacles
+    drawObstacle();
+      
+    // draw to screen
     canvas.save();
     canvas.restore();
   }
 
+  void drawObstacle() {
+    int width = this.rand.nextInt(100);
+    
+  }
+
   bool shouldRepaint(CustomPainter oldDelegate) => true;
 }
+
 
 class Game extends StatefulWidget {
   @override _GameState createState() => _GameState();
@@ -136,7 +149,6 @@ class _GameState extends State<Game> {
           clickPosition = new Offset(-1, -1);
         });
       },
-
 
       child: Container(
         child: CustomPaint(
