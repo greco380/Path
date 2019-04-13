@@ -1,7 +1,6 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
-import 'dart:math';
 import 'dart:core';
 import './colors.dart';
 
