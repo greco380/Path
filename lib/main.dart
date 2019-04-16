@@ -48,11 +48,11 @@ class GamePainter extends CustomPainter {
 
   GamePainter(this.clickPos, this.time, this.clicked, this.data);
 
-  Offset paintPivot(double r, double l, int spot) {
+  Offset paintPivot(double r, double l, int offset, int spot) {
     double radius = r * dimensions.width;
     double location = l * dimensions.width;
-    int speed = 500;
     int side = spot % 2;
+    int speed = 1000;
   
     var paint;
     if (this.data["id"] == spot) {
@@ -69,7 +69,7 @@ class GamePainter extends CustomPainter {
         ..strokeWidth = 15;
     }
 
-    double time = this.time / speed + rand.nextInt(500);
+    double time = (this.time / speed) + offset;
 
     Offset position = new Offset(
       -(side * 2 - 1) * radius *  abs(cos(time)) + dimensions.width * side,
@@ -102,12 +102,14 @@ class GamePainter extends CustomPainter {
     // draw pivots
     double dist = .3;
     double prevRadius = dist;
-    Offset prevPosition = paintPivot(prevRadius, dist, 1);
+    int prevAngle = 0;
+    Offset prevPosition = paintPivot(prevRadius, dist, prevAngle, 1);
 
-    for (var i = 2; i < 4; i++) {
+    for (var i = 2; i < 5; i++) {
       double radius = 1 - prevRadius + getDouble(0, prevRadius);
+      int angle = 180 - prevAngle;
       dist += sqrt(pow(radius + prevRadius, 2) - 1);
-      Offset position = paintPivot(radius, dist, i);
+      Offset position = paintPivot(radius, dist, angle, i);
 
       if (this.data["clicked"] == 1 && this.data["id"] == i - 1) {
         double dist = pow(prevPosition.dx - position.dx, 2) + pow(prevPosition.dy - position.dy, 2);
@@ -116,6 +118,7 @@ class GamePainter extends CustomPainter {
         }
       }
 
+      prevAngle = angle;
       prevRadius = radius;
     }
 
